@@ -454,123 +454,117 @@ Bachelor of Science in Computer Science
 %%% Command to generate recommendation page.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
- \newcommand{\ThesisRecommendationPage}{
-  \setlength{\topmargin}{0.0in}
-   \pagestyle{\@textpagestyle}
+% COMMENTED OUT THING
+% remove end bracket when done
+ \newcommand{\ThesisRecommendationPage}{ }
+%   \setlength{\topmargin}{0.0in}
+%    \pagestyle{\@textpagestyle}
 
- \paragraph{}The \lowercase\expandafter{\@ThesisType} entitled:
+%  \paragraph{}The \lowercase\expandafter{\@ThesisType} entitled:
 
 
- \begin{center}
- {\@ThesisTitle}
- \end{center}
+%  \begin{center}
+%  {\@ThesisTitle}
+%  \end{center}
 
- \noindent submitted by \@ThesisAuthor{} has been examined and is recommended for Oral Defense.
+%  \noindent submitted by \@ThesisAuthor{} has been examined and is recommended for Oral Defense.
 
-  \vfill
-  \begin{center}
-  \begin{tabular}{lcl}
-   \@FirstColumnAdjust\shortstack[]{
-    \underline{\phantom{\@DepartmentHead}}\\[0pt]
-    \@DepartmentHead\\[0pt]
-    \@DepartmentHeadPosition\\[0pt]}
-   &
-   \quad
-   &
-   \@SecondColumnAdjust\shortstack[]{
-    \underline{\phantom{\@ThesisAdviser}}\\[0pt]
-    \@ThesisAdviser\\[0pt]
-    Adviser\\[0pt]
-    % \phantom{ADviser}
-    }
- \end{tabular}
- \end{center}
+%   \vfill
+%   \begin{center}
+%   \begin{tabular}{lcl}
+%    \@FirstColumnAdjust\shortstack[]{
+%     \underline{\phantom{\@DepartmentHead}}\\[0pt]
+%     \@DepartmentHead\\[0pt]
+%     \@DepartmentHeadPosition\\[0pt]}
+%    &
+%    \quad
+%    &
+%    \@SecondColumnAdjust\shortstack[]{
+%     \underline{\phantom{\@ThesisAdviser}}\\[0pt]
+%     \@ThesisAdviser\\[0pt]
+%     Adviser\\[0pt]
+%     % \phantom{ADviser}
+%     }
+%  \end{tabular}
+%  \end{center}
 
- \vfill
+%  \vfill
 
-  \begin{center}
- \begin{tabular}{c}
- \shortstack{
- \underline{\phantom{\@SchoolHead}}\\[0pt]
- \@SchoolHead\\[0pt]
- \@SchoolHeadPosition\\[0pt]
- \@SchoolName}
- \end{tabular}
- \end{center}
+%   \begin{center}
+%  \begin{tabular}{c}
+%  \shortstack{
+%  \underline{\phantom{\@SchoolHead}}\\[0pt]
+%  \@SchoolHead\\[0pt]
+%  \@SchoolHeadPosition\\[0pt]
+%  \@SchoolName}
+%  \end{tabular}
+%  \end{center}
 
- \strut\vfill
- %\noindent Comprehensive Examinations Passed \@CompreDatesPassed{}.
+%%%%% ALREADY COMMENTED OUT 
+%  \strut\vfill
+%  \noindent Comprehensive Examinations Passed \@CompreDatesPassed{}.
+%%%%%%
 
- \newpage
-  }
+%  COMMENTED OUT THING
+%  \newpage
+%   }
 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Command to generate acceptance page for MS and MST.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\MSThesisAcceptancePage}{
-    \setlength{\topmargin}{-0.2in}
-      \pagestyle{\@textpagestyle}
-   The Faculty of the Graduate School of
-   \@UniversityName{}\\
-   \mbox{accepts} the \lowercase\expandafter{\@ThesisType} entitled:
+% remove end bracket when needed
+ \newcommand{\MSThesisAcceptancePage}{ }
+%     \setlength{\topmargin}{-0.2in}
+%       \pagestyle{\@textpagestyle}
+%    The Faculty of the Graduate School of
+%    \@UniversityName{}\\
+%    \mbox{accepts} the \lowercase\expandafter{\@ThesisType} entitled:
 
-  \vfill
-  \begin{center}
-  \textbf{\@ThesisTitle}
-  \end{center}
+%   \vfill
+%   \begin{center}
+%   \textbf{\@ThesisTitle}
+%   \end{center}
 
-   \vfill
-  \noindent submitted by \@ThesisAuthor{} in partial fulfillment of the requirements for the Degree of
-  \@ThesisDegree{} in \@ThesisArea.
+%    \vfill
+%   \noindent submitted by \@ThesisAuthor{} in partial fulfillment of the requirements for the Degree of
+%   \@ThesisDegree{} in \@ThesisArea.
 
-  \vfill  
-  \begin{center}
-    \begin{tabular}{lll}
-    \@FirstColumnAdjust\shortstack{
-      \underline{\phantom{\@FirstPanelMember}}\\[0pt]
-      \@FirstPanelMember\\[0pt]
-      Panelist}
-    &
-    \@SecondColumnAdjust\shortstack{
-      \underline{\phantom{\@ThesisAdviser}}\\[0pt]
-      \@SecondPanelMember\\[0pt]
-      Panelist}\\[20pt]
+%   \vfill  
+%   \begin{center}
+%     \begin{tabular}{lll}
+%     \@FirstColumnAdjust\shortstack{
+%       \underline{\phantom{\@FirstPanelMember}}\\[0pt]
+%       \@FirstPanelMember\\[0pt]
+%       Panelist}
+%     &
+%     \@SecondColumnAdjust\shortstack{
+%       \underline{\phantom{\@ThesisAdviser}}\\[0pt]
+%       \@SecondPanelMember\\[0pt]
+%       Panelist}\\[20pt]
+%     \end{tabular}
+%   \end{center}
 
-    % \@FirstColumnAdjust\shortstack{
-    %  \underline{\phantom{\@FirstPanelMember}}\\[0pt]
-    %  \@ThirdPanelMember\\[0pt]
-    %  Member
-    %  }
-    %  &
-    %  \@SecondColumnAdjust\shortstack{
-    %  \underline{\phantom{\@ThesisAdviser}}\\[0pt]
-    %  \@ThesisAdviser\\[0pt]
-    %  Adviser
-    %  }
-    \end{tabular}
-  \end{center}
-
- \vfill
-   \begin{center}
-  \begin{tabular}{c}
-    \shortstack{
-      \underline{\phantom{\@ThesisAdviser}}\\[0pt]
-      \@ThesisAdviser\\[0pt]
-      Adviser
-    }\\[32pt]
+%  \vfill
+%    \begin{center}
+%   \begin{tabular}{c}
+%     \shortstack{
+%       \underline{\phantom{\@ThesisAdviser}}\\[0pt]
+%       \@ThesisAdviser\\[0pt]
+%       Adviser
+%     }\\[32pt]
     
-  \shortstack{
-  \underline{\phantom{\@SchoolHead}}\\[0pt]
- \@SchoolHead\\[0pt]
- \@SchoolHeadPosition\\[0pt]
- \@SchoolName}
- \end{tabular}
- \end{center}
+%   \shortstack{
+%   \underline{\phantom{\@SchoolHead}}\\[0pt]
+%  \@SchoolHead\\[0pt]
+%  \@SchoolHeadPosition\\[0pt]
+%  \@SchoolName}
+%  \end{tabular}
+%  \end{center}
 
- \vfill
- %\noindent Grade: \textbf{\@ThesisGrade}\\[8pt]
-  Date:$\;\;\;$ \@DefenseDate
-\newpage}
+%  \vfill
+%  %\noindent Grade: \textbf{\@ThesisGrade}\\[8pt]
+%   Date:$\;\;\;$ \@DefenseDate
+% \newpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Command to generate acceptance page for PhD.
