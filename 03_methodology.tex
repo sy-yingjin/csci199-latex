@@ -3,7 +3,7 @@ The methodology will follow the Figure \ref{fig:Methodology}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1\textwidth]{Figures/methodology_flowchart.png}
+    \includegraphics[width=1\textwidth]{Figures/FlowofMethodology.png}
     \caption{Methodology Flowchart}
     \label{fig:Methodology}
 \end{figure}
@@ -11,39 +11,34 @@ The methodology will follow the Figure \ref{fig:Methodology}.
 % \clearpage
 
 \section{Data Collection}
-There are publicly available datasets for the 2024 US Presidential elections; however, for the 2022 Philippine Presidential Elections, the researchers will have to use a third-party Application Program Interface (API) due to the discontinued official free Academic API from X (former Twitter). In collecting tweets, keywords and dates will be utilized to perform an advanced search to get the tweets needed for the analysis.\newline
+Due to the discontinuation of the official free Academic API from X, the\\
+researchers will have to use a third-party Application Programming Interface (API) called Twikit for scraping posts about the 2022 Philippine Presidential elections. In collecting posts, keywords and dates will be utilized to perform an advanced search to get the posts needed for the analysis.\newline
 
 \begin{table}[h]
-    \centering
-    \begin{tabularx}{\textwidth}{X|X|X|X}
-        \textbf{Presidential Election Year} & \textbf{Intention to Run Announcement} & \textbf{Dates within the Dataset (Inclusive)} & \textbf{Key Terms}\\
-        \hline\hline
-        \multirow{2}{*}{2022}& Marcos and Duterte: October 5, 2021 & \multirow{2}{*}{May 9, 2022} & \multirow{2}{4cm}{Marcos, Duterte, Robredo, Kiko, Pangilinan, BBM, Leni, DU30, Uniteam, Bongbong} \\
-        & Robredo and Pangilinan: October 7, 2021 & & \\
-    \end{tabularx}
+    \renewcommand{\arraystretch}{1.8}
+
     \caption{Table for Philippine Dataset Ranges}
-\end{table}
-
-\begin{table}[h]
     \centering
-    \begin{tabularx}{\textwidth}{X|X|X|X}
-        \textbf{Presidential Election Year} & \textbf{Intention to Run Announcement} & \textbf{Dates within the Dataset (Inclusive)} & \textbf{Key Terms}\\
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{5cm}|>{\centering\arraybackslash}p{5cm}}
+        \textbf{Election Year} & \textbf{Start Date (Deadline for Filing of CoC)} & \textbf{End Date (Election Day Proper)}\\
         \hline\hline
-        \multirow{2}{*}{2024}& Trump and Vance: November 15, 2022 & \multirow{2}{*}{November 8, 2024} & \multirow{2}{4cm}{Harris, Walz, Trump, Vance, Kamala, JD Vance} \\
-        & Harris and Walz: July 21, 2024 & & \\
+        2019 Midterm & October 17, 2018 & May 12, 2019 \\
+        \hline
+        2022 Presidential & October 8, 2021 & May 8, 2022 \\
+        \hline
+        2025 Midterm & October 8, 2024 & May 11, 2025 \\
     \end{tabularx}
-    \caption{Table for United States Dataset Ranges}
 \end{table}
 
-The end dates are until election day because of the high chances of a spike of sentiments especially as election days come closer.
+The rationale behind the inclusive start-end dates is the high likelihood of a spike in sentiments from the public in two major events: the finalization of official candidates and election day proper.
 
-Each collected tweet is in JSON format. For it to be utilized for natural language processing, it will be saved as a \texttt{.csv} file, separated, with each row marked by which country it belongs to, because it will be utilized for text classification.
+Posts scraped per query will be saved in a CSV file with relevant information about each post, such as the account that posted it, engagement metrics (e.g. likes, replies, reposts), and whether or not the post is a standalone post, a reply to a prior existing post, or a quote repost of another post. 
 
 \section{Data Preprocessing}
-Before a group of datasets is fed into a tokenizer, they will undergo text processing.  Stop words such as \emph{“the,” “a,” “is”}, etc., will not be removed as they might be considered for the full context of a sentence when performing byte-tokenization. The following steps to preprocess the text will be as follows:
+Before a group of datasets is fed into a tokenizer, they will undergo text processing.  Stop words such as “the,” “a,” “is”, etc., will not be removed as they might be considered for the full context of a sentence when performing byte-tokenization. The following steps to preprocess the data will be as follows:
 
 \begin{itemize}
-    \item Omitting a tweet from the dataset if it is not in English, Tagalog, or a mix of them. The languages of the tweets will be detected by the Python library \texttt{langdetect}.
+    \item Omitting a post from the dataset if it is not in English, Tagalog, or a mix of them. Since Twikit takes care of labeling languages during the collection, they can be filtered using the Python library Pandas.
     \item Removing punctuation marks that have no significance for sentiment analysis.
     \item Replacing emojis with special tags.
     \item Removing unnecessary emojis or replacing emojis with special tags describing them if it is necessary for sentiment analysis.
@@ -51,32 +46,170 @@ Before a group of datasets is fed into a tokenizer, they will undergo text proce
     \item Handling links and email addresses by replacing them with a placeholder.
     \item Removing whitespaces and replacing multiple spaces with a single space.
     \item Adding paddings to equalize the length of sentences.
+    \item Anonymize the user mentions by replacing them with @user except for candidates’ user handles, if this is present in the post.
 \end{itemize}
 
-The preprocessed dataset will be placed in a new \texttt{.csv} file. It is expected that the dataset, after they are preprocessed, will be 20,000 tweets per election.
+The preprocessed dataset will be placed in a new CSV file. It is expected that the dataset, after they are preprocessed, will be 20,000 posts per election.
 
-\section{Text Classification and Visualization}
+\section{Text Annotation}
 \subsection{XLM-RoBERTa}
-After the preprocessing, the dataset will be fed into the following models: the \texttt{XLM-RoBERTa} model for contextualized embedding and the TF-IDF model for determining frequent keywords. XLM-RoBERTa’s language-agnostic approach makes it easier to implement as there is no need to identify if certain texts are in English or Tagalog.
+To detect the sentiment of election posts, they will be manually annotated as positive, negative, or neutral. Each has a value of 0, 1, and 2, respectively, once it is converted for analysis. These labels will help build the model dedicated to this study by adding a classification layer.
 
-Once the preprocessed dataset is fed into the model, the resulting tokens will be used to determine frequent keywords via TF-IDF and semantic similarities on the embedding model.
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.8}
 
-\subsection{GMM Model}
-Once the embeddings are generated, they will be compared for semantic similarity via \texttt{Gausian Mixture Model (GMM)}, an unsupervised probabilistic clustering algorithm. GMM clustering, in contrast with K-Means clustering, are modelled as Gausian distributions, providing them flexbilitiy in handling overlapping clusters and variance differences, especially XLM-RoBERTa produces contextualized embeddings in high dimensions. In the context of nuanced tweets or tweets with mixed emotions, GMM’s soft clustering handles it better because it gives probability distributions, which is valuable for interpreting such tweets. The embeddings will be fed into the GMM model and it will provide soft assignments to each embedding, allowing them to belong to multiple clusters with different probabilities. The manually marked sentiments, which will be colored in the visualization, will serve as an evaluation to see if the tweets of same sentiments belong to the same clusters.
-
-The clusters will be quantitatively evaluated by \texttt{Adjusted Rand Index\\(ARI)}, which examines the similarity between two clustering assignments. It will be used to determine if the agreement between the sentiment clusters and manually labelled sentiments.
-
-% \subsection{K-Means Model}
-% Once the embeddings are generated, they will be compared for semantic similarity via K-Means clustering. Since the model has a feature that helps determine if a tweet’s sentiment is positive, negative, or neutral, it will become a color indicator in the visualization of clusters to determine a cluster’s sentiment and visualize echo chambers. This will be crucial in comparing and contrasting the social media presence and activity of each candidate.
-
-\subsection{TF-IDF}
-Meanwhile, the tokenized texts will also go to the \texttt{TF-IDF model} to determine the frequency of words. The frequency of the words is sorted by how frequently they are used in a certain post or comment. The top keywords per candidate will be used to compare and contrast with other candidates and the social media spheres of the two countries.
-
-\subsection{Visualization}
-The interactive visualizations of the analysis consist of the following: a word cloud of the most frequent words and cluster visualization of semantic meanings. Using the time and date indicated in the dataset, they will be used to visualize the sentiments of the tweets during early election, mid-election, days before the election, and the election day itself. It will also highlight the surveys from public opinion polls to match if these strong sentiments has a correlation with the public polls and the election turnout on the day of election.
-\begin{figure}[h]
+    \caption{Sample Sentiment Annotation}
     \centering
-    \includegraphics[width=0.65\textwidth]{Figures/methodology_framework-for-comparing.png}
-    \caption{Framework for Comparing and Contrasting Sentiments}
-    \label{fig:Framework-for-sentiments}
-\end{figure}
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{10cm}}
+        \textbf{Positive} & "Showing my support to a good friend and Bagumbayan candidate for Senator Rafael Acuman" \\
+        \hline
+        \textbf{Neutral} & "A total of 129 party-list groups have filed their Certificate of Nomination and Acceptance CONA so far COMELEC expects a hundred more last-minute filers today." \\
+        \hline
+        \textbf{Negative} & “Mayoral candidate Isko Moreno blames incumbent Mayor Joseph Estrada for the worsening state of Manila adding that he will never build a political dynasty if he wins” \\
+    \end{tabularx}
+\end{table}
+
+Pre-existing XLM-R models that are already capable of determining sentiments of posts on X will be used. For this study, Anke et al.’s \cite{Barbieri-2022} XLM-T-Base model will be employed, with additional fine-tuning to accurately detect Filipino and English election sentiments while keeping the general sentiments. The 2019 and 2022 election datasets will be used to train sentiments, while the 2025 dataset will serve as an evaluation dataset. The metrics to be used will be:
+\begin{itemize}
+    \item Accuracy for overall correctness
+    \item Precision, Recall, and F1-score, especially when the dataset is imbalanced 
+    \item A Confusion Matrix to determine the misclassification during the evaluation process
+\end{itemize}
+
+A dataset of posts with hashtags \#Eleksyon[Year] and \#Halalan[Year] will be used for fine-tuning.
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.8}
+
+    \caption{Number of Tweets to Feed for Fine-Tuning}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4cm}}
+        \multirow{2}{*}{\textbf{Year}} & \multicolumn{3}{c}{\textbf{Sentiments}} \\
+        & \textbf{Positive} & \textbf{Neutral} & \textbf{Negative} \\
+        \hline\hline
+        2019 & 118 & 2498 & 120 \\
+        \hline
+        2022 & 126 & 3642 & 245 \\
+        \hline
+        2025 & 149 & 1155 & 178 \\
+        \hline
+        \textbf{TOTAL} & \textbf{393} & \text{7295} & \textbf{543} \\
+
+    \end{tabularx}
+    
+\end{table}
+
+
+The proportion of the three sentiments is significantly uneven. To prevent the model from dominantly inferring neutral sentiment, it will use Focal Loss instead of Cross Entropy Loss (CEL) to address the class imbalances, which uses a modified version of CEL with additional parameters such as \(\gamma\) (focusing factor) and optionally \(\alpha\) (class weight) to put more emphasis on the classes that are difficult to classify \cite{Lin-2018}.
+
+\subsection{Preparation for Fine-Tuning}
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.8}
+
+    \caption{Hyperparameters for Fine-Tuning Anke et al.'s \cite{Barbieri-2022} Twitter-XLM-RoBERTa-Base using Election  Tweets}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{9cm}|>{\centering\arraybackslash}p{5cm}}
+        \textbf{Hyperparameter} & \textbf{Value} \\
+        \hline\hline
+        Epochs & 3 \\
+        \hline
+        Train Batch Size per Device & 16 \\
+        \hline
+        Evaluation Batch Size per Device & 16 \\
+        \hline
+        Learning Rate* & 5e-05 \\
+        \hline
+        Weight Decay Rate* & 0.0 \\
+        \hline
+        Warm-up Steps* & 0 \\
+    \end{tabularx}
+    
+\end{table}
+
+These hyperparameters will be used to fine-tune the model. The emphasized parameters with an asterisk (*) are the default values from HuggingFace.
+
+\section{Agent-Based Modeling}
+\subsection{Creating the baseline simulation: 2019 Midterm and 2022 Presidential Elections}
+The output of the fine-tuned XLM-R model serves as a foundation for the creation of an agent. The following are the categories an agent belongs to: candidates, news outlets mentioning the candidates, influencers, and the general public. Influencer agents are neither candidates nor news outlets, yet they have more average interactions in their tweets than the general public. Therefore, they can serve as a “seed” in the simulation process.
+
+\subsection{Changing State}
+To change state, agents must interact with other agents and the relevant issues occurring during a specific time period.  Therefore, the following events in Table \ref{tab:debates} during the election have the potential to cause spikes in sentiments.
+
+\clearpage
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.8}
+
+    \caption{Table of Debates}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{4cm}|>{\centering\arraybackslash}p{4.5cm}|>{\centering\arraybackslash}p{5.5cm}}
+        \textbf{Election Year} & \textbf{Key Dates} & \textbf{Events}\\
+        \hline\hline
+        \multirow{4}{*}{2019 Midterm} & February 9, 2019 & GMA Network's Senatorial Face-Off \\
+        & February 18, 2019 & ABS-CBN's Harapan 2019 (1st Senatorial Town Hall Debate) \\
+        & March 1, 2019 & ABS-CBN's Harapan 2019 (2nd Senatorial Town Hall Debate) \\
+        & April 26, 2019 & CNN Philippines Senatorial Debate at UST \\
+        \hline
+        \multirow{4}{*}{2022 Presidential} & February 15, 2022 & SMNI Presidential Debate \\
+        & February 26, 2022 & CNN Philippines Vice Presidential Debate \\
+        & March 19, 2022 & COMELEC PiliPinas Presidential Debate (1st) \\
+        & March 20, 2022 & COMELEC PiliPinas Vice Presidential Debate \\
+        \hline
+        2025 Midterm & \multicolumn{2}{p{\textwidth}}{No COMELEC-hosted debates in this election year \cite{Aning-2025}.} \\
+    \end{tabularx}
+    \label{tab:debates}
+\end{table}
+
+To mitigate the lack of debates during the 2025 elections, key issues and surveys during the last three elections can factor into how the agents will react towards them. These terms are picked to ensure impartiality.
+\begin{itemize}
+    \item Surveys (such as Pulse Asia)
+    \item Issues: corruption, infrastructure, inflation, disinformation, fake news
+\end{itemize}
+
+\subsection{Simulating the 2025 Midterm Elections}
+Using the calibrated 2019 and 2022 elections simulation, the succeeding 2025 midterm election can now be simulated. Posts will be gathered about the 2025 midterms elections for the top 20 winning candidates. Sentiments from those posts will be extracted, and then fed as input into the simulation. The simulation will then determine election results. To verify the accuracy of these simulated results, t-testing will be done to determine if there is any statistically significant differences between simulated voter proportions and actual voter proportions during the 2025 midterm elections. 
+
+\subsection{Predicting Future Presidential Elections}
+Once the simulation has been verified to have accurately predicted the 2025 elections, the study will go beyond elections that have already passed to try and predict preliminary results for upcoming elections. With the agent-based model, a possible question of interest would be: “If the presidential elections were to happen at this moment, who would be the winners?”.  
+
+To try and answer this question, recent tweets will be gathered on
+\\prospecting presidential candidates based on existing poll and/or survey data in real-time. Using a similar method as in simulating the 2025 midterm elections, the simulation will now try to predict potential winners if the presidential elections were to happen this year. 
+
+\section{Initial Results}
+\subsection{Fine-Tuning the Model}
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{2}
+
+    \caption{Per-epoch Results of Fine-Tuning Twitter-XLM-RoBERTa-Base using Manually Annotated Election Tweets}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{1.3cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{1.6cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}}
+        \textbf{Epoch} & \textbf{Training Loss} & \textbf{Validation Loss} & \textbf{Accuracy} & \textbf{F1} & \textbf{Precision} & \textbf{Confusion Matrix} \\
+        \hline\hline
+        1 & 0.476000 & 1.428579 & 0.778827 & 0.681990 & 0.606571 & [[0, 149, 0], [0, 1155, 0], [0, 179, 0]] \\
+        \hline
+        2 & 0.361600 & 1.187964 & 0.778152 & 0.698625 & 0.654527 & [[0, 135, 14], [0, 1141, 14], [0, 166, 13]] \\
+        \hline
+        3 & 0.486600 & 1.261385 & 0.790290 & 0.747444 & 0.709042 & [[0, 98, 51], [0, 1093, 62], [0, 100, 79]] \\
+    \end{tabularx}
+    \label{tab:perepoch}
+
+\end{table}
+
+\clearpage
+
+\begin{table}
+    \renewcommand{\arraystretch}{1.8}
+
+    \caption{Overall Evaluation Results from Fine-Tuning Anke et al.’s \cite{Barbieri-2022} Twitter-XLM-RoBERTa-Base using Manually Annotated Election Tweets}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{3.5cm}}
+        \textbf{Loss} & \textbf{Accuracy} & \textbf{F1} & \textbf{Precision} & \textbf{Confusion Matrix} \\
+        \hline\hline
+        1.2614 & 0.7902 & 0.7474 & 0.7090 & [[0, 98, 51], [0, 1093, 62], [0, 100, 79]] \\
+    \end{tabularx}
+    \label{tab:overalleval}
+
+\end{table}
+
+Shown in tables \ref{tab:perepoch} and \ref{tab:overalleval} are the initial results of fine-tuning Twitter-XLM-R-Base using datasets gathered on the 2019 midterm, 2022 presidential, and 2025 midterm elections. The model was trained over three epochs using, as aforementioned, datasets on the 2019 and 2022 elections as training data, and the dataset on the 2025 elections as validation data. The tables show a steady increase in accuracy with each epoch, with an overall accuracy of fine-tuned Twitter-XLM-R-Base of about 79.02\% and an overall F1 score of 0.7474.
