@@ -1,5 +1,4 @@
 \chapter{METHODOLOGY}
-The methodology will follow the Figure \ref{fig:Methodology}.
 
 \begin{figure}[h]
     \centering
@@ -8,11 +7,10 @@ The methodology will follow the Figure \ref{fig:Methodology}.
     \label{fig:Methodology}
 \end{figure}
 
-% \clearpage
+Figure \ref{fig:Methodology} shows an overview of the methodology for this study. Posts collected will first be annotated according to their sentiment, and then used to fine-tune the model. Posts will then be used as a basis of the environment of our simulation, whilst the sentiments extracted by XLM-R will be used to define our agents. The agent-based model will then simulate interactions made regarding electoral candidates, which may or may not trigger a change in the user’s views and attitudes.
 
 \section{Data Collection}
-Due to the discontinuation of the official free Academic API from X, the\\
-researchers will have to use a third-party Application Programming Interface (API) called Twikit for scraping posts about the 2022 Philippine Presidential elections. In collecting posts, keywords and dates will be utilized to perform an advanced search to get the posts needed for the analysis.\newline
+Due to the discontinuation of the official free Academic API from X, the researchers will have to use a third-party Application Programming Interface (API) called Twikit for scraping posts about the 2022 Philippine Presidential elections. In collecting posts, keywords and dates will be utilized to perform an advanced search to get the posts needed for the analysis.\newline
 
 \begin{table}[h]
     \renewcommand{\arraystretch}{1.8}
@@ -94,11 +92,9 @@ A dataset of posts with hashtags \#Eleksyon[Year] and \#Halalan[Year] will be us
         2025 & 149 & 1155 & 178 \\
         \hline
         \textbf{TOTAL} & \textbf{393} & \text{7295} & \textbf{543} \\
-
     \end{tabularx}
     
 \end{table}
-
 
 The proportion of the three sentiments is significantly uneven. To prevent the model from dominantly inferring neutral sentiment, it will use Focal Loss instead of Cross Entropy Loss (CEL) to address the class imbalances, which uses a modified version of CEL with additional parameters such as \(\gamma\) (focusing factor) and optionally \(\alpha\) (class weight) to put more emphasis on the classes that are difficult to classify \cite{Lin-2018}.
 
@@ -115,18 +111,19 @@ The proportion of the three sentiments is significantly uneven. To prevent the m
         \hline
         Train Batch Size per Device & 16 \\
         \hline
-        Evaluation Batch Size per Device & 16 \\
+        Evaluation Batch Size per Device & 32 \\
         \hline
-        Learning Rate* & 5e-05 \\
+        Learning Rate & 2e-5 \\
         \hline
-        Weight Decay Rate* & 0.0 \\
+        Weight Decay Rate & 0.01 \\
         \hline
-        Warm-up Steps* & 0 \\
+        Warm-up Steps & 0.06 \\
     \end{tabularx}
+    \label{fig:hyperparameters}
     
 \end{table}
 
-These hyperparameters will be used to fine-tune the model. The emphasized parameters with an asterisk (*) are the default values from HuggingFace.
+Table \ref{fig:hyperparameters} shows the hyperparameters that will be used to fine-tune the model. First, three epochs are used to train and evaluate the model. Then, the learning rate is set at 2e-5, which differs from some models that use a rate of 5e-5, as this model is being fine-tuned from a pre-trained version. Then, batch sizes for training and evaluation differ to accelerate the evaluation process. Lastly, the weight decay rate is set at 0.01 and the warmup ratio is 0.06.
 
 \section{Agent-Based Modeling}
 \subsection{Creating the baseline simulation: 2019 Midterm and 2022 Presidential Elections}
@@ -172,44 +169,5 @@ Using the calibrated 2019 and 2022 elections simulation, the succeeding 2025 mid
 \subsection{Predicting Future Presidential Elections}
 Once the simulation has been verified to have accurately predicted the 2025 elections, the study will go beyond elections that have already passed to try and predict preliminary results for upcoming elections. With the agent-based model, a possible question of interest would be: “If the presidential elections were to happen at this moment, who would be the winners?”.  
 
-To try and answer this question, recent tweets will be gathered on
-\\prospecting presidential candidates based on existing poll and/or survey data in real-time. Using a similar method as in simulating the 2025 midterm elections, the simulation will now try to predict potential winners if the presidential elections were to happen this year. 
-
-\section{Initial Results}
-\subsection{Fine-Tuning the Model}
-
-\begin{table}[h]
-    \renewcommand{\arraystretch}{2}
-
-    \caption{Per-epoch Results of Fine-Tuning Twitter-XLM-RoBERTa-Base using Manually Annotated Election Tweets}
-    \centering
-    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{1.3cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{1.6cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}}
-        \textbf{Epoch} & \textbf{Training Loss} & \textbf{Validation Loss} & \textbf{Accuracy} & \textbf{F1} & \textbf{Precision} & \textbf{Confusion Matrix} \\
-        \hline\hline
-        1 & 0.476000 & 1.428579 & 0.778827 & 0.681990 & 0.606571 & [[0, 149, 0], [0, 1155, 0], [0, 179, 0]] \\
-        \hline
-        2 & 0.361600 & 1.187964 & 0.778152 & 0.698625 & 0.654527 & [[0, 135, 14], [0, 1141, 14], [0, 166, 13]] \\
-        \hline
-        3 & 0.486600 & 1.261385 & 0.790290 & 0.747444 & 0.709042 & [[0, 98, 51], [0, 1093, 62], [0, 100, 79]] \\
-    \end{tabularx}
-    \label{tab:perepoch}
-
-\end{table}
-
-\clearpage
-
-\begin{table}
-    \renewcommand{\arraystretch}{1.8}
-
-    \caption{Overall Evaluation Results from Fine-Tuning Anke et al.’s \cite{Barbieri-2022} Twitter-XLM-RoBERTa-Base using Manually Annotated Election Tweets}
-    \centering
-    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{3.5cm}}
-        \textbf{Loss} & \textbf{Accuracy} & \textbf{F1} & \textbf{Precision} & \textbf{Confusion Matrix} \\
-        \hline\hline
-        1.2614 & 0.7902 & 0.7474 & 0.7090 & [[0, 98, 51], [0, 1093, 62], [0, 100, 79]] \\
-    \end{tabularx}
-    \label{tab:overalleval}
-
-\end{table}
-
-Shown in tables \ref{tab:perepoch} and \ref{tab:overalleval} are the initial results of fine-tuning Twitter-XLM-R-Base using datasets gathered on the 2019 midterm, 2022 presidential, and 2025 midterm elections. The model was trained over three epochs using, as aforementioned, datasets on the 2019 and 2022 elections as training data, and the dataset on the 2025 elections as validation data. The tables show a steady increase in accuracy with each epoch, with an overall accuracy of fine-tuned Twitter-XLM-R-Base of about 79.02\% and an overall F1 score of 0.7474.
+To try and answer this question, recent tweets will be gathered on\\
+prospecting presidential candidates based on existing poll and/or survey data in real-time. Using a similar method as in simulating the 2025 midterm elections, the simulation will now try to predict potential winners if the presidential elections were to happen this year. 

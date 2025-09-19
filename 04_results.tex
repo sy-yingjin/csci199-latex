@@ -1,4 +1,71 @@
 \chapter{RESULTS AND DISCUSSION}
+
+\section{Fine-Tuning the Model}
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.8}
+
+    \caption{Per-epoch Results of Fine-Tuning Twitter-XLM-RoBERTa-Base using Manually Annotated Election Tweets}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2.5cm}}
+        \textbf{Epoch} & \textbf{Training Loss} & \textbf{Validation Loss} & \textbf{Accuracy} & \textbf{F1} \\
+        \hline\hline
+        1 & 0.352100 & 0.960999 & 0.790290 & 0.794193 \\
+        \hline
+        2 & 0.263000 & 0.648351 & 0.763318 & 0.783774 \\
+        \hline
+        3 & 0.127700 & 0.631237 & 0.794336 & 0.807629 \\
+    \end{tabularx}
+
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{5cm}}
+        \textbf{Epoch} & \textbf{Precision} & \textbf{Macro F1} & \textbf{Confusion Matrix} \\
+        1 & 0.834747 & 0.683953 & [[107, 34, 8], [80, 944, 131], [14, 38, 127]] \\
+        \hline
+        2 & 0.833354 & 0.657547 & [[98, 32, 19], [81, 891, 183], [10, 26, 143]] \\
+        \hline
+        3 & 0.804361 & 0.616454 & [[57, 61, 31], [48, 998, 109], [10, 52, 117]] \\
+        
+    \end{tabularx}
+    \label{tab:perepoch}
+
+\end{table}
+
+% \clearpage
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{2}
+
+    \caption{Overall Evaluation Results from Fine-Tuning Anke et al.’s \cite{Barbieri-2022} Twitter-XLM-RoBERTa-Base using Manually Annotated Election Tweets}
+    \centering
+    \begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{3.5cm}}
+        \textbf{Loss} & \textbf{Accuracy} & \textbf{F1} & \textbf{Precision} & \textbf{Macro F1} & \textbf{Confusion Matrix} \\
+        \hline\hline
+        0.6312 & 0.7943 & 0.8076 & 0.8347 & 0.6840 & [107, 34, 8], [80, 944, 131], [14, 38, 127 ] \\
+
+
+    \end{tabularx}
+    \label{tab:overalleval}
+
+\end{table}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]{Figures/confusion_matrix.png}
+    \caption{Confusion Matrix}
+    \label{fig:confusionmatrix}
+\end{figure}
+
+\clearpage
+
+Shown in tables \ref{tab:perepoch} and \ref{tab:overalleval} are the initial results of fine-tuning Twitter-XLM-R-Base using datasets gathered on the 2019 midterm, 2022 presidential, and 2025 midterm elections. The model was trained over three epochs using, as aforementioned, datasets on the 2019 and 2022 elections as training data, and the dataset on the 2025 elections as validation data. The tables show a steady increase in accuracy with each epoch, with an overall accuracy of fine-tuned Twitter-XLM-R-Base of about 79.02\% and an overall F1 score of 0.7474. Finally, figure \ref{fig:confusionmatrix} shows the overall confusion matrix of our finetuned model.
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\textwidth, height=\textheight,keepaspectratio]{Method1OrigMap.png}
+%     \caption{LDA-LSA Double Filter Plot of Original Tweets}
+%     \label{fig:my_label1}
+% \end{figure}
+
 % \section{Method of Measuring Accuracy of Approximated Coordinates}
 % There were three methods used in the measuring of the accuracy of the approximated latitude and longitude coordinates produced by the discussed methodologies in this study. These three are: 1) looking at the Mean Absolute Error of the approximated coordinates compared to the actual coordinates of the tweets in the dataset, 2) using the Haversine Formula to get the average distance of each approximated coordinate from its actual location, and 3) using the Vincety Formula in place of the Haversine Formula. It is to be noted that the LDA-LSA Double Filter (first methodology) used only half of the dataset as test data while the Dynamic Dictionaries Per Region method (second methodology) used the entire dataset. 
 
